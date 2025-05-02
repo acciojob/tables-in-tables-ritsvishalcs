@@ -1,79 +1,85 @@
-function createTableWithHeaders(headers) {
-  const table = document.createElement('table');
-  const thead = document.createElement('thead');
-  const tr = document.createElement('tr');
-
-  headers.forEach(headerText => {
-    const th = document.createElement('th');
-    th.textContent = headerText;
-    tr.appendChild(th);
+// Helper function to create elements
+function createElement(tag, text = '', attributes = {}) {
+    const el = document.createElement(tag);
+    if (text) el.textContent = text;
+    for (let attr in attributes) {
+      el.setAttribute(attr, attributes[attr]);
+    }
+    return el;
+  }
+  
+  // Main table
+  const mainTable = createElement('table');
+  mainTable.setAttribute('border', '1');
+  
+  // Row for nested tables
+  const mainRow = createElement('tr');
+  
+  // Nested Table 1
+  const td1 = createElement('td');
+  const nestedTable1 = createElement('table', '', { border: '1' });
+  const th1 = createElement('th', 'Nested Table 1');
+  const tr1 = createElement('tr');
+  tr1.appendChild(th1);
+  nestedTable1.appendChild(createElement('thead')).appendChild(tr1);
+  const contentRow1 = createElement('tr');
+  contentRow1.appendChild(createElement('td', 'Content 1'));
+  nestedTable1.appendChild(createElement('tbody')).appendChild(contentRow1);
+  td1.appendChild(nestedTable1);
+  
+  // Nested Table 2
+  const td2 = createElement('td');
+  const nestedTable2 = createElement('table', '', { border: '1' });
+  const thead2 = createElement('thead');
+  const tr2 = createElement('tr');
+  ['Nested Table 2', 'Column 1', 'Column 2'].forEach(text => {
+    tr2.appendChild(createElement('th', text));
   });
-
-  thead.appendChild(tr);
-  table.appendChild(thead);
-
-  return table;
-}
-
-function createList(items) {
-  const ul = document.createElement('ul');
-  items.forEach(item => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    ul.appendChild(li);
+  thead2.appendChild(tr2);
+  nestedTable2.appendChild(thead2);
+  const tbody2 = createElement('tbody');
+  const dataRow2 = createElement('tr');
+  ['Row 1', 'Row 2', 'Row 3'].forEach(text => {
+    dataRow2.appendChild(createElement('td', text));
   });
-  return ul;
-}
-
-function createMainStructure() {
-  const mainTable = document.createElement('table');
-
-  const row = document.createElement('tr');
-
-  // First nested table
-  const cell1 = document.createElement('td');
-  const nestedTable1 = createTableWithHeaders(['Nested Table 1']);
-  cell1.appendChild(nestedTable1);
-  row.appendChild(cell1);
-
-  // Second nested table (with 3 headers)
-  const cell2 = document.createElement('td');
-  const nestedTable2 = createTableWithHeaders(['Nested Table 2', 'Column 1', 'Column 2']);
-  const row2 = document.createElement('tr');
-  const cell2_1 = document.createElement('td');
-  cell2_1.colSpan = 3;
-  cell2_1.textContent = 'Row under 3 headers';
-  row2.appendChild(cell2_1);
-  nestedTable2.appendChild(row2);
-  cell2.appendChild(nestedTable2);
-  row.appendChild(cell2);
-
-  // Third nested table (with a list)
-  const cell3 = document.createElement('td');
-  const nestedTable3 = createTableWithHeaders(['Nested Table 3']);
-  const row3 = document.createElement('tr');
-  const listCell = document.createElement('td');
-  listCell.appendChild(createList(['List item 1', 'List item 2', 'List item 3']));
-  row3.appendChild(listCell);
-  nestedTable3.appendChild(row3);
-  cell3.appendChild(nestedTable3);
-  row.appendChild(cell3);
-
-  // Fourth nested table with 'HTML' cell
-  const cell4 = document.createElement('td');
-  const nestedTable4 = createTableWithHeaders(['Nested Table 4']);
-  const row4 = document.createElement('tr');
-  const htmlCell = document.createElement('td');
-  htmlCell.textContent = 'HTML';
+  tbody2.appendChild(dataRow2);
+  nestedTable2.appendChild(tbody2);
+  td2.appendChild(nestedTable2);
+  
+  // Nested Table 3 with list
+  const td3 = createElement('td');
+  const nestedTable3 = createElement('table', '', { border: '1' });
+  nestedTable3.appendChild(createElement('thead')).appendChild(createElement('tr')).appendChild(createElement('th', 'Nested Table 3'));
+  const listRow = createElement('tr');
+  const listCell = createElement('td');
+  const ul = createElement('ul');
+  ['List item 1', 'List item 2', 'List item 3'].forEach(text => {
+    ul.appendChild(createElement('li', text));
+  });
+  listCell.appendChild(ul);
+  listRow.appendChild(listCell);
+  nestedTable3.appendChild(createElement('tbody')).appendChild(listRow);
+  td3.appendChild(nestedTable3);
+  
+  // Nested Table 4 with black cell
+  const td4 = createElement('td');
+  const nestedTable4 = createElement('table', '', { border: '1' });
+  nestedTable4.appendChild(createElement('thead')).appendChild(createElement('tr')).appendChild(createElement('th', 'Nested Table 4'));
+  const htmlRow = createElement('tr');
+  const htmlCell = createElement('td', 'HTML');
   htmlCell.classList.add('html-cell');
-  row4.appendChild(htmlCell);
-  nestedTable4.appendChild(row4);
-  cell4.appendChild(nestedTable4);
-  row.appendChild(cell4);
-
-  mainTable.appendChild(row);
+  htmlRow.appendChild(htmlCell);
+  nestedTable4.appendChild(createElement('tbody')).appendChild(htmlRow);
+  td4.appendChild(nestedTable4);
+  
+  // Append all nested tables to main row
+  mainRow.appendChild(td1);
+  mainRow.appendChild(td2);
+  mainRow.appendChild(td3);
+  mainRow.appendChild(td4);
+  
+  // Append main row to main table and then to body
+  mainTable.appendChild(mainRow);
   document.body.appendChild(mainTable);
-}
-
-createMainStructure();
+  
 
